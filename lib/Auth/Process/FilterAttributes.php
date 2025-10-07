@@ -14,7 +14,11 @@
  * @author Gyula Szabo  NIIF / Hungarnet
  * @author Tamas Frank  NIIF / Hungarnet
  */
-class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Auth_ProcessingFilter
+
+
+use SimpleSAML\Auth\ProcessingFilter;
+use SimpleSAML\Logger;
+class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML\Auth\ProcessingFilter
 {
     private $attributesWithScope = array(
         'eduPersonPrincipalName',
@@ -61,7 +65,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
         $src = $request['Source'];
 
         if (isset($src['entityid']) && in_array($src['entityid'], $this->ignoreCheckForEntities, true)) {
-            SimpleSAML_Logger::debug('Ignoring scope checking for assertions from ' . $src['entityid']);
+            SimpleSAML\Logger::debug('Ignoring scope checking for assertions from ' . $src['entityid']);
             return;
         }
 
@@ -69,7 +73,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
         if (!isset($src['scope']) ||
                 !is_array($src['scope']) ||
                 !count($src['scope'])) {
-            SimpleSAML_Logger::warning('No scope extension in IdP metadata, all scoped attributes are filtered out!');
+            SimpleSAML\Logger::warning('No scope extension in IdP metadata, all scoped attributes are filtered out!');
             $noscope = true;
         }
         $scopes = $noscope ? array() : $src['scope'];
@@ -79,7 +83,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
                 continue;
             }
             if ($noscope) {
-                SimpleSAML_Logger::info('Attribute '.$attributesWithScope.' is filtered out due to missing scope information in IdP metadata.');
+                SimpleSAML\Logger::info('Attribute '.$attributesWithScope.' is filtered out due to missing scope information in IdP metadata.');
                 unset($request['Attributes'][$attributesWithScope]);
                 continue;
             }
@@ -89,7 +93,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
                 if ($this->isProperlyScoped($value, $scopes)) {
                     $newValues[] = $value;
                 } else {
-                    SimpleSAML_Logger::warning('Attribute value ('.$value.') is removed by attributescope check.');
+                    SimpleSAML\Logger::warning('Attribute value ('.$value.') is removed by attributescope check.');
                 }
             }
 
@@ -103,10 +107,10 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
         foreach ($this->scopeAttributes as $scopeAttribute) {
             if (array_key_exists($scopeAttribute, $request['Attributes'])) {
                 if (count($request['Attributes'][$scopeAttribute]) != 1) {
-                    SimpleSAML_Logger::warning('$scopeAttribute (' . $scopeAttribute . ') must be single valued. Filtering out.');
+                    SimpleSAML\Logger::warning('$scopeAttribute (' . $scopeAttribute . ') must be single valued. Filtering out.');
                     unset($request['Attributes'][$scopeAttribute]);
                 } elseif (!in_array($request['Attributes'][$scopeAttribute][0], $scopes)) {
-                    SimpleSAML_Logger::warning('Scope attribute (' . $scopeAttribute . ') does not match metadata. Filtering out.');
+                    SimpleSAML\Logger::warning('Scope attribute (' . $scopeAttribute . ') does not match metadata. Filtering out.');
                     unset($request['Attributes'][$scopeAttribute]);
                 }
             }
@@ -117,7 +121,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
                 continue;
             }
             if ($noscope) {
-                SimpleSAML_Logger::info('Attribute '.$attributeWithSuffix.' is filtered out due to missing scope information in IdP metadata.');
+                SimpleSAML\Logger::info('Attribute '.$attributeWithSuffix.' is filtered out due to missing scope information in IdP metadata.');
                 unset($request['Attributes'][$attributeWithSuffix]);
                 continue;
             }
@@ -127,7 +131,7 @@ class sspmod_attributescope_Auth_Process_FilterAttributes extends SimpleSAML_Aut
                 if ($this->isProperlySuffixed($value, $scopes)) {
                     $newValues[] = $value;
                 } else {
-                    SimpleSAML_Logger::warning('Attribute value ('.$value.') is removed by attributeWithScopeSuffix check.');
+                    SimpleSAML\Logger::warning('Attribute value ('.$value.') is removed by attributeWithScopeSuffix check.');
                 }
             }
 

@@ -7,7 +7,7 @@
         "simplesamlphp/composer-module-installer": "^1.1"
     },
     "require-dev": {
-        "simplesamlphp/simplesamlphp": "1.14",
+        "simplesamlphp/simplesamlphp": "~1.18.7",
         "phpunit/phpunit": "~4.8.35"
     },
     "autoload-dev": {
@@ -16,5 +16,10 @@
     "support": {
         "issues": "https://github.com/NIIF/simplesamlphp-module-attributescope/issues",
         "source": "https://github.com/NIIF/simplesamlphp-module-attributescope"
+    },
+    "config": {
+        "allow-plugins": {
+            "simplesamlphp/composer-module-installer": true
+        }
     }
 }
