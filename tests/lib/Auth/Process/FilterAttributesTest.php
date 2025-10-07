@@ -12,6 +12,7 @@ class Test_sspmod_attributescope_Auth_Process_FilterAttributes extends PHPUnit_F
      */
     private static function processFilter(array $config, array $request)
     {
+        /** @disregard P1009 intelliphense ignore undefined type */
         $filter = new sspmod_attributescope_Auth_Process_FilterAttributes($config, null);
         $filter->process($request);
         return $request;
